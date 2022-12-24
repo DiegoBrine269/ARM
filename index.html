@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Árbol de recubrimiento mínimo</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    </head>
+    <body>
+
+        <div class="container-md">
+            <h1>Árbol de recubrimiento mínimo</h1>
+            <form id="formAgregarNodo" class="row g-3">
+                <fieldset>
+                    <legend>Agregar nuevo nodo</legend>
+                    <div class="col-auto">
+                        <label for="">Número de nodo:</label>
+                        <input type="number" id="numNodo" required value="0" placeholder="0">
+                        <input type="submit" value="Agregar" id="agregarNodo" class="btn btn-primary">
+                    </div>
+                </fieldset>
+            </form>
+        
+            <hr>
+        
+            <form id="formAgregarCon" class="row g-3">
+                <fieldset>
+                    <legend>Conexión entre nodos</legend>
+                    <div class="col-auto">
+                        <label for="">Agregar conexión entre el nodo</label>
+                        <select name="" id="select1" required>
+                            <option value="" selected disabled>Selecione un nodo</option>
+                            <!-- <option value="">Nodo 1</option> -->
+                        </select>
+            
+                        <label for="">y el nodo</label>
+                        <select name="" id="select2" required>
+                            <option value="" selected disabled>Selecione un nodo</option>
+                            <!-- <option value="">Nodo 1</option> -->
+                        </select>
+            
+                        <label for=""> con un valor de </label>
+                        <input type="num" id="valor" required>
+                        <input type="submit" value="Agregar" id="agregarNodo" class="btn btn-primary">
+                    </div>
+                </fieldset>
+            </form>
+
+            <form id="formCalcular" action="" class="mt-5">
+                <input type="submit" value="Calcular mejor camino" id="calcular" class="btn btn-success">
+            </form>
+        </div>
+
+        <div class="container-md">
+            <canvas id="canvas" width="1000" height="1000" class="bg-light">
+                
+            </canvas>
+        </div>
+
+        <script src="./index.js"></script>
+
+    </body>
+</html>
