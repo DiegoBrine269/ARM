@@ -1,7 +1,9 @@
+
+
 let grafo = [];
 let listaNodos = [];
-let canvas = document.querySelector("#canvas");
-let ctx = canvas.getContext("2d");
+let svg = document.querySelector("#svg");
+
 
 let xNodo = 100;
 let yNodo = 100;
@@ -9,7 +11,9 @@ let yNodo = 100;
 //Guarda las posiciones en las que se encuentran los nodos
 let posicionesNodos = new Array();
 
+let draw;
 window.addEventListener("DOMContentLoaded", function (e) {
+    draw = SVG().addTo('#svg-container').size(1000, 1000);
     agregarNodo();
     agregarConexion();
     calcular();
@@ -119,36 +123,28 @@ function agregarNodo() {
 
         console.log(JSON.stringify(grafo));
 
-        //Dibujando en Canvas
-        ctx.beginPath();
-        ctx.lineWidth = 2; 
-        ctx.strokeStyle = "blue";
+        //Dibujando en svg
+
+        let circulo = draw.circle(100);
+        circulo.fill('#63f289');
+        circulo.text('hola');
         
+        svg.append(circuloSvg);
         if(xNodo >= 1000) {
             yNodo += 200;
             xNodo = 100;
         }
         
         
-        ctx.arc(xNodo, yNodo,40,0,2*Math.PI);
+
         posicionesNodos[numNodo] = {
             'x' : xNodo,
             'y': yNodo
         }
 
-        console.log(posicionesNodos);
-
-        ctx.fillStyle ="#ddd";
-        ctx.fill()
-        ctx.stroke();
-
         
-        // ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.font = '20pt Calibri';
-        ctx.fillStyle = 'black';
-        ctx.textAlign = 'center';
-        ctx.fillText(numNodo, xNodo, yNodo+8);
+        // svg.fill();
+
         
         xNodo += 300;
 
@@ -193,19 +189,19 @@ function agregarConexion() {
             'y' : posicionesNodos[nodoHijo].y
         }
 
-        ctx.globalCompositeOperation = 'destination-over';
-        ctx.beginPath();
+        svg.globalCompositeOperation = 'destination-over';
+        svg.beginPath();
          
-        ctx.moveTo(inicioLinea.x, inicioLinea.y);
-        ctx.lineTo(finLinea.x, finLinea.y);
-        ctx.stroke();
+        svg.moveTo(inicioLinea.x, inicioLinea.y);
+        svg.lineTo(finLinea.x, finLinea.y);
+        svg.stroke();
 
         //Texto
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.font = "20px Arial";
-        ctx.textAlign = 'center';
-        ctx.fillStyle = "black";    
-        ctx.fillText(valor, (inicioLinea.x + finLinea.x)/2, (inicioLinea.y + finLinea.y)/2);
+        svg.globalCompositeOperation = 'source-over';
+        svg.font = "20px Arial";
+        svg.textAlign = 'center';
+        svg.fillStyle = "black";    
+        svg.fillText(valor, (inicioLinea.x + finLinea.x)/2, (inicioLinea.y + finLinea.y)/2);
 
 
     });    
