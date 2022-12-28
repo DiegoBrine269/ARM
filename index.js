@@ -1,19 +1,14 @@
-
-
 let grafo = [];
 let listaNodos = [];
-let svg = document.querySelector("#svg");
-
+let canvas = document.querySelector("#canvas");
+let ctx = canvas.getContext("2d");
 
 let xNodo = 100;
 let yNodo = 100;
 
-//Guarda las posiciones en las que se encuentran los nodos
-let posicionesNodos = new Array();
 
-let draw;
+
 window.addEventListener("DOMContentLoaded", function (e) {
-    draw = SVG().addTo('#svg-container').size(1000, 1000);
     agregarNodo();
     agregarConexion();
     calcular();
@@ -119,32 +114,48 @@ function agregarNodo() {
         select2.append(option2);
 
         console.log(nodo);
+
+        //Guardando coordenadas
+        nodo.x = xNodo;
+        nodo.y = yNodo;
         grafo.push(nodo);
 
         console.log(JSON.stringify(grafo));
 
-        //Dibujando en svg
-
-        let circulo = draw.circle(100);
-        circulo.fill('#63f289');
-        circulo.text('hola');
+        //Dibujando en Canvas
+        ctx.beginPath();
+        ctx.lineWidth = 2; 
+        ctx.strokeStyle = "blue";
         
-        svg.append(circuloSvg);
         if(xNodo >= 1000) {
             yNodo += 200;
             xNodo = 100;
         }
         
         
+        ctx.arc(xNodo, yNodo,40,0,2*Math.PI);
+        nodo.x = xNodo;
+        nodo.y = yNodo;
+        
 
-        posicionesNodos[numNodo] = {
-            'x' : xNodo,
-            'y': yNodo
-        }
+
+
+        ctx.fillStyle ="#ddd";
+        ctx.fill()
+        ctx.stroke();
 
         
-        // svg.fill();
+        // ctx.fill();
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.font = '20pt Calibri';
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.fillText(numNodo, xNodo, yNodo+8);
 
+        if(numNodo == '0'){
+            ctx.font = '15pt Calibri';
+            ctx.fillText("origen", xNodo, yNodo-47);
+        }
         
         xNodo += 300;
 
@@ -180,28 +191,28 @@ function agregarConexion() {
         //Dibujando línea
 
         const inicioLinea = {
-            'x' : posicionesNodos[nodoPadre].x, 
-            'y' : posicionesNodos[nodoPadre].y
+            'x' : grafo[nodoPadre].x, 
+            'y' : grafo[nodoPadre].y
         }
 
         const finLinea = {
-            'x' : posicionesNodos[nodoHijo].x, 
-            'y' : posicionesNodos[nodoHijo].y
+            'x' : grafo[nodoHijo].x, 
+            'y' : grafo[nodoHijo].y
         }
 
-        svg.globalCompositeOperation = 'destination-over';
-        svg.beginPath();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.beginPath();
          
-        svg.moveTo(inicioLinea.x, inicioLinea.y);
-        svg.lineTo(finLinea.x, finLinea.y);
-        svg.stroke();
+        ctx.moveTo(inicioLinea.x, inicioLinea.y);
+        ctx.lineTo(finLinea.x, finLinea.y);
+        ctx.stroke();
 
         //Texto
-        svg.globalCompositeOperation = 'source-over';
-        svg.font = "20px Arial";
-        svg.textAlign = 'center';
-        svg.fillStyle = "black";    
-        svg.fillText(valor, (inicioLinea.x + finLinea.x)/2, (inicioLinea.y + finLinea.y)/2);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.font = "20px Arial";
+        ctx.textAlign = 'center';
+        ctx.fillStyle = "black";    
+        ctx.fillText(valor, (inicioLinea.x + finLinea.x)/2, (inicioLinea.y + finLinea.y)/2);
 
 
     });    
@@ -211,9 +222,52 @@ function calcular() {
     const formCalcular = document.querySelector('#formCalcular');
 
     formCalcular.addEventListener('submit', function(e) {
+        
+        const solucion = prim(grafo);
+
         e.preventDefault();
 
-        alert(prim(grafo));
+        solucion.forEach(union => { setTimeout( function () {
+
+
+                    // console.log(grafo[union[0]].x, grafo[union[0]].y);
+                    // const x = (grafo[union[0]].x + grafo[union[2]].x) / 2;
+                    // const y = (grafo[union[0]].y + grafo[union[2]].y) / 2;
+                     
+
+
+                
+                    // console.log(x, y);
+                    // ctx.fillStyle = 'green';
+                    // // ctx.ellipse(x, y, 50, 75, 0, 0, 0);
+                    // ctx.ellipse(x, y, 30, 75, 1.5 * Math.PI, 0, 2 * Math.PI);
+                    // ctx.stroke();
+
+                    const inicioLinea = {
+                        'x' : grafo[union[2]].x, 
+                        'y' : grafo[union[2]].y
+                    }
+            
+                    const finLinea = {
+                        'x' : grafo[union[0]].x, 
+                        'y' : grafo[union[0]].y
+                    }
+
+                    console.log(inicioLinea, finLinea);
+
+                    
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.strokeStyle = "#adf542";
+                    ctx.beginPath(); 
+                    ctx.lineWidth = 4;
+                    ctx.moveTo(inicioLinea.x, inicioLinea.y);
+                    ctx.lineTo(finLinea.x, finLinea.y);
+                    ctx.fill() 
+                    ctx.stroke();
+
+                }, 1000);
+        });
+
+        // alert(solucion);
     });
 }
-
