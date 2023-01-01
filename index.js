@@ -1,3 +1,5 @@
+// import Swal from 'sweetalert2'
+
 let grafo = [];
 let listaNodos = [];
 let canvas = document.querySelector("#canvas");
@@ -6,9 +8,10 @@ let ctx = canvas.getContext("2d");
 let xNodo = 100;
 let yNodo = 100;
 
-
+let suma = 0;
 
 window.addEventListener("DOMContentLoaded", function (e) {
+    
     agregarNodo();
     agregarConexion();
     calcular();
@@ -53,6 +56,7 @@ function prim(nodes=[]){
     for (let i=0; i<n; i++){
         masProximo[i] = 0;
         distanciaMinima[i] = longitudesAristas[i][0];
+
     }
     let resultado = [];
     for (let i=1; i<n; i++){
@@ -78,11 +82,18 @@ function prim(nodes=[]){
 
 
 function agregarNodo() {
+
+    
     
     const formAgregarNodo = document.querySelector('#formAgregarNodo'); //Input para agregar nodos
     
     formAgregarNodo.addEventListener('submit', function(e) {
         e.preventDefault();
+
+         
+        // console.log();
+        
+        //Incrementando altura del canvas
         const numNodo = document.querySelector('#numNodo').value;
 
 
@@ -172,6 +183,20 @@ function agregarConexion() {
         const nodoHijo = document.querySelector('#select2').value;
         const valor = document.querySelector('#valor').value;
 
+        //Validando campos
+
+        if(!Number.isInteger(parseInt(valor)) || parseInt(valor) < 1) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Valor no válido',
+                icon: 'error',
+                confirmButtonText: 'Cool'
+            });
+
+            return;
+        }
+        
+
         const indexHijo = grafo.findIndex((nodo => nodo.index == nodoHijo));
 
         //Se agrega la conexión al padre solo si no existe
@@ -214,7 +239,6 @@ function agregarConexion() {
         ctx.fillStyle = "black";    
         ctx.fillText(valor, (inicioLinea.x + finLinea.x)/2, (inicioLinea.y + finLinea.y)/2);
 
-
     });    
 }
 
@@ -228,46 +252,34 @@ function calcular() {
         e.preventDefault();
 
         solucion.forEach(union => { setTimeout( function () {
+            const inicioLinea = {
+                'x' : grafo[union[2]].x, 
+                'y' : grafo[union[2]].y
+            }
+    
+            const finLinea = {
+                'x' : grafo[union[0]].x, 
+                'y' : grafo[union[0]].y
+            }
 
+            // const pesoArco = grafo[union[0]].parent.filter( p => p.index == union[2])[0].value;
+            // console.log(pesoArco);
 
-                    // console.log(grafo[union[0]].x, grafo[union[0]].y);
-                    // const x = (grafo[union[0]].x + grafo[union[2]].x) / 2;
-                    // const y = (grafo[union[0]].y + grafo[union[2]].y) / 2;
-                     
-
-
-                
-                    // console.log(x, y);
-                    // ctx.fillStyle = 'green';
-                    // // ctx.ellipse(x, y, 50, 75, 0, 0, 0);
-                    // ctx.ellipse(x, y, 30, 75, 1.5 * Math.PI, 0, 2 * Math.PI);
-                    // ctx.stroke();
-
-                    const inicioLinea = {
-                        'x' : grafo[union[2]].x, 
-                        'y' : grafo[union[2]].y
-                    }
             
-                    const finLinea = {
-                        'x' : grafo[union[0]].x, 
-                        'y' : grafo[union[0]].y
-                    }
 
-                    console.log(inicioLinea, finLinea);
 
-                    
-                    ctx.globalCompositeOperation = 'source-over';
-                    ctx.strokeStyle = "#adf542";
-                    ctx.beginPath(); 
-                    ctx.lineWidth = 4;
-                    ctx.moveTo(inicioLinea.x, inicioLinea.y);
-                    ctx.lineTo(finLinea.x, finLinea.y);
-                    ctx.fill() 
-                    ctx.stroke();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = "#adf542";
+            ctx.beginPath(); 
+            ctx.lineWidth = 4;
+            ctx.moveTo(inicioLinea.x, inicioLinea.y);
+            ctx.lineTo(finLinea.x, finLinea.y);
+            ctx.fill() 
+            ctx.stroke();
 
-                }, 1000);
+            }, 1000);
         });
 
-        // alert(solucion);
+        alert(suma);
     });
 }
