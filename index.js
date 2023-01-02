@@ -316,6 +316,7 @@ function limpiar() {
 
         document.querySelector('#formCalcular').classList.toggle('d-none');
         document.querySelector('#btnLimpiar').classList.toggle('d-none');
+        document.querySelector('#numNodo').value = '0';
 
         const select1 = document.querySelector('#select1');
         const select2 = document.querySelector('#select2');
