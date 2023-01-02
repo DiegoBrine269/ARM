@@ -15,26 +15,8 @@ window.addEventListener("DOMContentLoaded", function (e) {
     agregarNodo();
     agregarConexion();
     calcular();
+    limpiar();
 });
-/*= [
-    {"index":0, "parent":-1},
-    {"index":1, "parent":
-        [{"index":0, "value":2}]
-    },
-    {"index":2, "parent":
-        [{"index":0, "value":5},
-        {"index":1, "value":5}]
-    },
-    {"index":3, "parent":
-        [{"index":1, "value":3},
-        {"index":4, "value":4}]
-    },
-    {"index":4, "parent":
-        [{"index":1, "value":2},
-        {"index":2, "value":4},
-        {"index":0, "value":6}]
-    }
-]*/
 
 function prim(nodes=[]){
     // debugger;
@@ -56,7 +38,6 @@ function prim(nodes=[]){
     for (let i=0; i<n; i++){
         masProximo[i] = 0;
         distanciaMinima[i] = longitudesAristas[i][0];
-
     }
     let resultado = [];
     for (let i=1; i<n; i++){
@@ -68,7 +49,14 @@ function prim(nodes=[]){
                 k = j;
             }
         }
+        suma += minimo;
         resultado.push(`${k},${masProximo[k]}`);
+        
+        // const pesoArco = grafo.find(nodo => nodo.index === k).parent === undefined ? grafo.find(nodo => nodo.index === masProximo[k]).parent.find(nodo => nodo.index === k).value : grafo.find(nodo => nodo.index === k).parent.find(nodo => nodo.index === masProximo[k]).value;
+        
+        
+        // suma += pesoArco;
+        
         distanciaMinima[k] = -1;
         for (let j=1; j<n; j++){
             if (longitudesAristas[j][k]<distanciaMinima[j]){
@@ -76,6 +64,7 @@ function prim(nodes=[]){
                 masProximo[j] = k;
             }
         }
+        
     }
     return resultado;
 }
@@ -83,19 +72,14 @@ function prim(nodes=[]){
 
 function agregarNodo() {
 
-    
-    
     const formAgregarNodo = document.querySelector('#formAgregarNodo'); //Input para agregar nodos
     
     formAgregarNodo.addEventListener('submit', function(e) {
         e.preventDefault();
 
-         
-        // console.log();
         
         //Incrementando altura del canvas
         const numNodo = document.querySelector('#numNodo').value;
-
 
         console.log(numNodo);
 
@@ -105,7 +89,6 @@ function agregarNodo() {
         let nodo = {};
         nodo.index = parseInt(numNodo);
         nodo.parent = -1;
-
 
         listaNodos.push(numNodo);
 
@@ -123,8 +106,6 @@ function agregarNodo() {
 
         select1.append(option1);
         select2.append(option2);
-
-        console.log(nodo);
 
         //Guardando coordenadas
         nodo.x = xNodo;
@@ -149,13 +130,10 @@ function agregarNodo() {
         nodo.y = yNodo;
         
 
-
-
         ctx.fillStyle ="#ddd";
         ctx.fill()
         ctx.stroke();
 
-        
         // ctx.fill();
         ctx.globalCompositeOperation = 'source-over';
         ctx.font = '20pt Calibri';
@@ -247,13 +225,35 @@ function calcular() {
     
     formCalcular.addEventListener('submit', function(e) {
         
+        e.preventDefault();
+
+        //Validando que el grafo no esté vacío
+        if(grafo.length === 0) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Grafo vacío',
+                icon: 'error',
+                confirmButtonText: 'Cool'
+            });
+
+            return;
+        }
+
+
+        //Ocultando botón
+        console.log(e.target);
+        e.target.classList.toggle('d-none');
+        document.querySelector('#btnLimpiar').classList.toggle('d-none');
+
         const solucion = prim(grafo);
 
-        e.preventDefault();
 
         var interval = 1000;
         var promise = Promise.resolve();
-        solucion.forEach(function (union) { 
+
+        let finAnimacion = false;
+
+        solucion.forEach(function (union, idx, array) { 
             promise = promise.then( function () {
                 const inicioLinea = {
                     'x' : grafo[union[2]].x, 
@@ -264,12 +264,7 @@ function calcular() {
                     'x' : grafo[union[0]].x, 
                     'y' : grafo[union[0]].y
                 }
-
-                // const pesoArco = grafo[union[0]].parent.filter( p => p.index == union[2])[0].value;
-                // console.log(pesoArco);
-
-                
-
+            
 
                 ctx.globalCompositeOperation = 'source-over';
                 ctx.strokeStyle = "#adf542";
@@ -280,12 +275,52 @@ function calcular() {
                 ctx.fill() 
                 ctx.stroke();
 
+                
+
                 return new Promise(function (resolve) {
                     setTimeout(resolve, interval);
-                  });
+                });
             });
+
         });
 
-        // alert(suma);
+        
+        setTimeout(()=>{
+            Swal.fire({
+                icon: 'success',
+                title: 'Problema resuelto',
+                text: 'Costo mínimo : ' + suma,
+                showConfirmButton: false,
+                timer: 1500
+              })
+        }, solucion.length * interval);
+
+
+    });
+
+
+}
+
+function limpiar() {
+    const btnLimpiar = document.querySelector('#btnLimpiar');
+
+    btnLimpiar.addEventListener('click', function() {
+        grafo = [];
+        listaNodos = [];
+        xNodo = 100;
+        yNodo = 100;
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+
+        document.querySelector('#formCalcular').classList.toggle('d-none');
+        document.querySelector('#btnLimpiar').classList.toggle('d-none');
+
+        const select1 = document.querySelector('#select1');
+        const select2 = document.querySelector('#select2');
+
+        select1.innerHTML = '<option value="" selected disabled>Selecione un nodo</option>';
+        select2.innerHTML = '<option value="" selected disabled>Selecione un nodo</option>';
     });
 }

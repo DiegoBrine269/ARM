@@ -41,10 +41,10 @@
                     <div class="col-lg-6">
                         <form id="formAgregarCon" class="row g-3 mt-3">
                             <fieldset class="m-0">
-                                <legend>Conexión entre nodos</legend>
+                                <legend>Agregar conexión entre nodos</legend>
                                 <div class="col-auto">
                                     <div class="d-flex justify-content-between w-100 p-1 mx-2" >
-                                        <label for="">Agregar conexión entre el nodo</label>
+                                        <label for="">Nodo padre:</label>
                                         <select name="" id="select1" required>
                                             <option value="" selected disabled>Selecione un nodo</option>
                                             <!-- <option value="">Nodo 1</option> -->
@@ -52,7 +52,7 @@
                                     </div>
                         
                                     <div class="d-flex justify-content-between w-100 p-1 mx-2">
-                                        <label for="">y el nodo</label>
+                                        <label for="">Nodo hijo:</label>
                                         <select name="" id="select2" required>
                                             <option value="" selected disabled>Selecione un nodo</option>
                                             <!-- <option value="">Nodo 1</option> -->
@@ -60,7 +60,7 @@
                                     </div>
                         
                                     <div class="d-flex justify-content-between w-100 p-1 mx-2">
-                                        <label for=""> con un valor de </label>
+                                        <label for=""> Valor </label>
                                         <input type="number" id="valor" required min="0">
                                     </div>
             
@@ -76,6 +76,10 @@
                 <form id="formCalcular" action="" class="my-4">
                     <input type="submit" value="Calcular mejor camino" id="calcular" class="btn btn-success">
                 </form>
+
+                <div class="my-4">
+                    <button class="btn btn-danger d-none" id="btnLimpiar">Limpiar</button>
+                </div>
             </div>
         </div>
 
