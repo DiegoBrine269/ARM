@@ -244,42 +244,48 @@ function agregarConexion() {
 
 function calcular() {
     const formCalcular = document.querySelector('#formCalcular');
-
+    
     formCalcular.addEventListener('submit', function(e) {
         
         const solucion = prim(grafo);
 
         e.preventDefault();
 
-        solucion.forEach(union => { setTimeout( function () {
-            const inicioLinea = {
-                'x' : grafo[union[2]].x, 
-                'y' : grafo[union[2]].y
-            }
-    
-            const finLinea = {
-                'x' : grafo[union[0]].x, 
-                'y' : grafo[union[0]].y
-            }
+        var interval = 1000;
+        var promise = Promise.resolve();
+        solucion.forEach(function (union) { 
+            promise = promise.then( function () {
+                const inicioLinea = {
+                    'x' : grafo[union[2]].x, 
+                    'y' : grafo[union[2]].y
+                }
+        
+                const finLinea = {
+                    'x' : grafo[union[0]].x, 
+                    'y' : grafo[union[0]].y
+                }
 
-            // const pesoArco = grafo[union[0]].parent.filter( p => p.index == union[2])[0].value;
-            // console.log(pesoArco);
+                // const pesoArco = grafo[union[0]].parent.filter( p => p.index == union[2])[0].value;
+                // console.log(pesoArco);
 
-            
+                
 
 
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.strokeStyle = "#adf542";
-            ctx.beginPath(); 
-            ctx.lineWidth = 4;
-            ctx.moveTo(inicioLinea.x, inicioLinea.y);
-            ctx.lineTo(finLinea.x, finLinea.y);
-            ctx.fill() 
-            ctx.stroke();
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = "#adf542";
+                ctx.beginPath(); 
+                ctx.lineWidth = 4;
+                ctx.moveTo(inicioLinea.x, inicioLinea.y);
+                ctx.lineTo(finLinea.x, finLinea.y);
+                ctx.fill() 
+                ctx.stroke();
 
-            }, 1000);
+                return new Promise(function (resolve) {
+                    setTimeout(resolve, interval);
+                  });
+            });
         });
 
-        alert(suma);
+        // alert(suma);
     });
 }
